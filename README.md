@@ -7,3 +7,4 @@ Smart Saver
 ### Partner
 > philip : back-end
 > nakyoung : front-end
+> sukwoo : back-end
