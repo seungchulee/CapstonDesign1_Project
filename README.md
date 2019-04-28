@@ -1,6 +1,11 @@
 # CapstonDesign1_Project
 Smart Saver
 
+# Partner
+> philip : back-end<br>
+> nakyoung : front-end<br>
+> sukwoo : back-end
+
 # Title
 > 움직임, 인체 감지 센서를 통한 전력 차단기
 
@@ -26,10 +31,4 @@ t분 이상 집을 비우면 움직임, 인체 센서를 통해 전력 차단
 데이터를 기준으로 t를 자동으로 조절  
 (ex : 집을 평균적으로 1시간 이상 비우면 t를 1분씩 줄임)  
 (ex : t가 10분일때 평균적으로 집을 비운 시간이 20분 정도로 큰 차이가 없는 경우 전력을 껐다, 켰다 하는 것이 더 소모가 되므로 t를 증가)
-
-
-### Partner
-> philip : back-end<br>
-> nakyoung : front-end<br>
-> sukwoo : back-end
 
