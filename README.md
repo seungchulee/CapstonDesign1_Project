@@ -4,8 +4,8 @@ Smart Saver
 # Partner
 > philip : back-end<br>
 > nakyoung : front-end<br>
-> sukwoo : back-end
-> seungchul : front-end
+> sukwoo : back-end<br>
+> seungchule : front-end
 
 # Title
 > 움직임, 인체 감지 센서를 통한 전력 차단기
