@@ -1,0 +1,35 @@
+    {# 상단 메뉴 #}
+    <nav class="navbar bg-dark navbar-dark navbar-expand-sm fixed-top">
+        {# 좌측 로고 #}
+        <a class="navbar-brand" href="/board_list/1">멀캠타임</a>
+        {# 좌측 메뉴 #}
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/board_list/1">내 정보</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/board_list/2">출결등록</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/board_list/3">출결 그래프</a>
+            </li>
+        </ul>
+        {# 우측 메뉴 #}
+        <ul class="navbar-nav ml-auto">
+            {% if session['login'] and session['login'] == 'YES' %}
+            <li class="nav-item">
+                <a class="nav-link" href="/user_modify">정보수정</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user_logout">로그아웃</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('user.user_login') }}">로그인</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user_join">회원가입</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
