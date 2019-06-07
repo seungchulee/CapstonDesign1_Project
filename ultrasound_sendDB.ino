@@ -145,7 +145,7 @@ void sendDB()
     Serial.println("connection failed");
     return;
   }
-  url+="/main_send?isPerson="+isPerson+"&id=aaa"+"&people="+people;
+  url+="/main/send?isPerson="+isPerson+"&id=aaa"+"&people="+people;
   Serial.print("Requesting URL:");
   Serial.println(url);
   client.print(String("GET ") + url+" HTTP/1.1\r\n"+"Host: "+myserver+"\r\n"+"Connection: close\r\n\r\n");
