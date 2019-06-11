@@ -9,11 +9,14 @@ int trigpinIN = 16; // D0
 int echopinIN = 5; // D1
 int trigpinOUT = 4; // D2
 int echopinOUT = 0; // D3
+int BTN_PIN = 14; // D5
 int INflag = 0;
 int prevINflag = 0;
 int OUTflag = 0;
 int prevOUTflag = 0;
+int ONflag = 1;
 int people = 0;
+int btn = 0;
 long durationIN, distanceIN, durationOUT, distanceOUT;
 String url="";
 String isPerson="";
@@ -30,10 +33,34 @@ void setup() {
   pinMode(echopinIN, INPUT);
   pinMode(trigpinOUT, OUTPUT);
   pinMode(echopinOUT, INPUT);
+  pinMode(BTN_PIN, INPUT_PULLUP);
 }
 void loop() {
+  btn = digitalRead(BTN_PIN); // 스위치 눌렀을 때 0, 뗐을 때 1
   distanceIN = calculate_distanceIN();
   distanceOUT = calculate_distanceOUT();
+
+  if(btn==0 && ONflag==1){ // auto기능이 켜진 상태에서 스위치가 눌림 -> 전원 off
+    people = 0; isPerson = "0";
+    Serial.println("Auto detect mode OFF");
+    while(!(digitalRead(BTN_PIN))) // 0일 때 무한루프 돌다가 1이 되면 빠져나옴
+      delay(30);
+    Serial.println("push finished");
+    sendDB();
+    
+    while(digitalRead(BTN_PIN)) // 1일 때 무한루프 돌다가 다시 버튼이 눌리면 빠져나옴 -> auto모드로 전환
+      delay(30);
+ 
+    Serial.print("Auto detect mode ON");
+    Serial.println(people);
+    while(!(digitalRead(BTN_PIN))) // 0일 때 무한루프 돌다가 1이 되면 빠져나옴
+      delay(30);
+    Serial.println("push finished");
+    people = 1; isPerson = "1";
+    sendDB();
+    delay(300);
+  }
+
   
   if(distanceIN <= 50)  INflag = 1;
   else  INflag = 0;
