@@ -9,7 +9,7 @@
 #include "ESP8266HTTPClient.h"
 #define arduino_id "aaa"
 #define arduino_sub_num 1
-int relay_pin = 2;  // Initialized the pin for relay module
+int relay_pin = 2;  // D4 Initialized the pin for relay module
 long interval=15;
 long max_interval=20;
 long time_count=0;
@@ -17,14 +17,15 @@ const char* myserver="18.223.29.244";
 const char* MY_SSID="Seungchule의 iPhone";
 const char* MY_PWD="qqqqqqqqqq";
 
+int send_count=0;
+
 float getVPP();
 const int sensorIn = A0;
-int mVperAmp = 66; // use 185 for 5A Module and 100 for 20A Module
+int mVperAmp = 185; // use 185 for 5A Module and 100 for 20A Module
 
 double Voltage = 0;
 double VRMS = 0;
 double AmpsRMS = 0;
-
 int getisPerson()
 {
   
@@ -85,24 +86,6 @@ void loop(){
 
   
   if(isPerson == 0){
-    /*int flag=0;
-    for(int i=0;i<60;i++)
-    {
-      int IP=getisPerson();
-      if(IP==1)
-      {
-        digitalWrite(relay_pin,LOW);
-        flag=1;
-        break;
-      }
-      else
-      {
-        delay(100);
-      }
-    }
-    if(flag==0){
-      digitalWrite(relay_pin, HIGH);
-    }*/
     digitalWrite(relay_pin, HIGH);
   }
   else if(isPerson == 1){
@@ -110,10 +93,12 @@ void loop(){
   }
 
 
-  
+       
   Voltage = getVPP();
-  VRMS = (Voltage/2.0) *0.707; 
-  AmpsRMS = (VRMS * 1000)/mVperAmp;
+   VRMS = (Voltage) *100; 
+  //VRMS = (Voltage/2.0) *0.707; 
+  AmpsRMS = (VRMS*100)/mVperAmp;
+  //AmpsRMS = (Voltage * 1000)/mVperAmp;
   float Power;
 
   Serial.print(Voltage);
@@ -122,25 +107,52 @@ void loop(){
   Serial.println(" Voltage RMS");
   Serial.print(AmpsRMS);
   Serial.println(" Amps RMS");
-  Power=VRMS*AmpsRMS;
-  Serial.println(Power*1000);
-  
-  
-  String url="/sub/send?id=";
-  url+=arduino_id;
-  url+="&arduino_sub_num=";
-  url+=String(arduino_sub_num);
-  url+="&power=";
-  url+=String(Power*1000);
+  Power=VRMS*AmpsRMS*0.707*0.85;
+  Serial.println(Power);
 
-  Serial.print("Requesting URL:");
-  Serial.println(url);
-  client.print(String("GET ") + url+" HTTP/1.1\r\n"+"Host: "+myserver+"\r\n"+"Connection: close\r\n\r\n");
-  while(client.available())
-  {
-    String line=client.readStringUntil('\r');
-//    Serial.print(line);
+  send_count+=1;
+  
+  if(Power<500 && Power>4){
+    String url="/sub/send?id=";
+    url+=arduino_id;
+    url+="&arduino_sub_num=";
+    url+=String(arduino_sub_num);
+    url+="&power=";
+    url+=String(Power);
+  
+    Serial.print("Requesting URL:");
+    Serial.println(url);
+    client.print(String("GET ") + url+" HTTP/1.1\r\n"+"Host: "+myserver+"\r\n"+"Connection: close\r\n\r\n");
+    while(client.available())
+    {
+      String line=client.readStringUntil('\r');
+  //    Serial.print(line);
+    }
   }
+  else
+  {
+    String url="/sub/send?id=";
+    url+=arduino_id;
+    url+="&arduino_sub_num=";
+    url+=String(arduino_sub_num);
+    url+="&power=";
+    url+=String(0);
+  
+    Serial.print("Requesting URL:");
+    Serial.println(url);
+    client.print(String("GET ") + url+" HTTP/1.1\r\n"+"Host: "+myserver+"\r\n"+"Connection: close\r\n\r\n");
+    while(client.available())
+    {
+      String line=client.readStringUntil('\r');
+  //    Serial.print(line);
+    }
+  }
+
+  for(int j=0;j<60;j++)
+  {
+    delay(1000);
+  }
+  
  // Serial.println();
  // Serial.println("closing connection");
   //Serial.println("************************");
