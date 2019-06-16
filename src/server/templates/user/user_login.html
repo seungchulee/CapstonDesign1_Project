@@ -9,7 +9,21 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 		<script>
-			
+			function check_input(){
+				user_id = $("#user_id").val();
+				user_pw = $("#user_pw").val();
+				if(user_id.length == 0){
+					alert('아이디를 입력해주세요');
+					$("#user_id").focus();
+					return false;
+				}
+				if(user_pw.length == 0){
+					alert('비밀번호를 입력해주세요');
+					$("#user_pw").focus();
+					return false;
+				}
+				return true;
+			}
 		</script>
 	</head>
 	<body>
