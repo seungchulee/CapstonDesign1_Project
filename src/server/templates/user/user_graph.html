@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>templates/index.html</title>
+		{# bootstrap CDN #}
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+			<script type="text/javascript">
+				google.charts.load('current',{'packages':['line']});
+				google.charts.setOnLoadCallback(drawChart);
+			function drawChart(){
+				
+				var graph=new Array();
+				var k=0;
+				{#for(var i =0;i<{{data_len}};i++)#}
+				{%for i in range(data_len)%}
+					var inner=new Array();
+					inner.push(new Date({{data_year[i]}},{{data_month[i]}}-1,{{data_day[i]}},{{data_hour[i]}},{{data_min[i]}}));
+					inner.push({{data_list[i][1]}});
+					graph.push(inner);
+					k++;
+				{%endfor%}	
+
+				{#				var graph=[[new Date(2017,04-1,1,00,38),20],[new Date(2017,04-1,2,00,40),30]]#}
+				var data = new google.visualization.DataTable();
+				data.addColumn('date','Date/Time');
+				data.addColumn('number','elec');
+				data.addRows(graph);
+				var options = {
+					chart:{
+						title:'title',
+						subtitle:'subtitle'
+					},
+					width:1024,
+					height:512,
+					axes:{
+						x:{
+							0:{side:'bottom'}
+						}
+					}
+				};
+				var chart= new google.charts.Line(document.getElementById('line_top_x'));
+				chart.draw(data,google.charts.Line.convertOptions(options));
+			}
+		</script>
+	</head>
+	<body>
+		{% include '/include/top_menu.html' %}
+		
+		<div class="container" style="margin-top:100px">
+			<div class="row">
+				<div class="col-2"></div>
+				<div class="col-8"> 
+					<h1>{{data_dict['user_name']}} 님의 정보입니다. </h1><hr/>
+					<div id="line_top_x"></div>
+					<table class="table table-hover table-sm">
+						<thead>
+							<th>Time</th> 
+							<th>Person</th>
+							<th>{{data_len}}</th>
+						</thead>
+						<tbody>
+							{% for idx in data_list %}
+							<tr class="table-row">
+								<td>{{idx[0]}}</td>
+								<td>{{idx[1]}}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="col-2"></div>
+			</div>
+		</div>
+	</body>
+</html>
