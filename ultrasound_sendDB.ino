@@ -73,11 +73,10 @@ void loop() {
       
       if(OUTflag != prevOUTflag){
         if(OUTflag == 1){
-          if(people != 0) // 0이 아닐 때
-            people-=1;
+          people-=1; // 음수값도 db로 넘겨야 하므로 무조건 -1 해줌
           Serial.print("People absent in the home : ");
           Serial.println(people);
-          if(people == 0) // 사람이 아예 없을때만 0값을 넘김
+          if(people <= 0) // 사람이 아예 없을때만 0값을 넘김
             isPerson="0";
           else
             isPerson="1";
@@ -108,7 +107,10 @@ void loop() {
       
       if(INflag != prevINflag){
         if(INflag == 1){
-          people+=1;
+          if(people<=0) // 음수에서 detected되면 바로 1명으로 바꿈(DB에는 음수 값을 계속 보내기 위해서)
+            people=1;
+          else // 양수일 경우 그냥 people+1
+            people+=1;
           Serial.print("People detected in the home : ");
           Serial.println(people);
           isPerson="1";
